@@ -55,10 +55,12 @@ class Filter
 
                     $filter = $item['filter'];
                     if (is_callable($filter)) {
-                        return $this->container->call($item['filter'], $arguments);
+                        return call_user_func_array($item['filter'], $arguments);
                     }
 
-                    return $this->container->call($item['filter'].'@filter', $arguments);
+                    $instance = $this->container->make($item['filter']);
+
+                    return call_user_func_array([$instance, 'filter'], $arguments);
                 }, $init);
         } else {
             return $init;
